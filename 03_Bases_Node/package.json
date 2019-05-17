@@ -1,0 +1,14 @@
+{
+  "name": "03_bases_node",
+  "version": "1.0.0",
+  "description": "Esta es una aplicacion de linea de comandos",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rodrigo Alvarellos",
+  "license": "ISC",
+  "dependencies": {
+    "yargs": "^13.2.4"
+  }
+}
