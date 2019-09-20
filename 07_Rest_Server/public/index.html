@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Google Sign-In Demo</title>
+
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="85181410942-pgck0dos48a7udj3ml14ig0jp4s6esdl.apps.googleusercontent.com" />
+</head>
+
+<body>
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+    <br /><br />
+    <a href="#" onclick="signOut();">Sign out</a>
+
+    <!-- <img src="http://localhost:3000/imagen/usuarios/5d7f9f5ab565be0cd484d787-886.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjp7InJvbGUiOiJBRE1JTl9ST0xFIiwiZXN0YWRvIjp0cnVlLCJnb29nbGUiOmZhbHNlLCJfaWQiOiI1ZDdmOWY1YWI1NjViZTBjZDQ4NGQ3ODciLCJub21icmUiOiJUZXN0IDEiLCJlbWFpbCI6InRlc3QxQGdtYWlsLmNvbSIsIl9fdiI6MCwiaW1nIjoiNWQ3ZjlmNWFiNTY1YmUwY2Q0ODRkNzg3LTg4Ni5wbmcifSwiaWF0IjoxNTY4OTkxMjcwLCJleHAiOjE1NjkxNjQwNzB9.uuXm1VlYt_IgNVRg90eQ4av09Qx0KbUkNyMlL-VGbQg"
+    alt="Imagen"> -->
+
+    <script>
+        function onSignIn(googleUser) {
+            var profile = googleUser.getBasicProfile();
+            console.log("ID: " + profile.getId()); // Do not send to your backend! Use an ID token instead.
+            console.log("Name: " + profile.getName());
+            console.log("Image URL: " + profile.getImageUrl());
+            console.log("Email: " + profile.getEmail()); // This is null if the 'email' scope is not present.
+
+            var id_token = googleUser.getAuthResponse().id_token;
+            // console.log(id_token);
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/google");
+            xhr.setRequestHeader(
+                "Content-Type",
+                "application/x-www-form-urlencoded"
+            );
+            xhr.onload = function() {
+                console.log("Signed in as: " + xhr.responseText);
+            };
+            xhr.send("idtoken=" + id_token);
+        }
+
+        function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function() {
+                console.log("User signed out.");
+            });
+        }
+    </script>
+</body>
+
+</html>

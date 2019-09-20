@@ -1,50 +1,33 @@
 require('./config/config');
 
+const path = require('path');
 const express = require('express');
-const app = express();
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
+const app = express();
 
-// parse application/json
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false })); // parse application/x-www-form-urlencoded
+app.use(bodyParser.json()); // parse application/json
 
-//Rutas
+// Habilitar la carpeta Public
+app.use(express.static(path.resolve(__dirname, '../public')));
 
-app.get('/usuario', (req, res) => {
-    res.json('GET Usuario');
+
+// Configuracion Global de Rutas
+app.use(require('./routes/index'));
+
+
+
+mongoose.connect(process.env.urlDB, {
+    useNewUrlParser: true,
+    useFindAndModify: false,
+    useUnifiedTopology: true,
+    useCreateIndex: true
+}, (err, res) => {
+    if (err) throw err;
+    console.log('Base de datos ONLINE');
 });
-
-app.post('/usuario', (req, res) => {
-
-    let body = req.body;
-
-    if (body.nombre === undefined) {
-        res.status(400).json({
-            ok: false,
-            mensaje: 'El nombre es necesario'
-        });
-    } else {
-
-        res.json({ persona: body });
-    }
-
-
-});
-
-app.put('/usuario/:id', (req, res) => {
-    let id = req.params.id;
-
-    res.json({ id });
-});
-
-app.delete('/usuario', (req, res) => {
-    res.json('DELETE Usuario');
-});
-
-
-
 
 app.listen(process.env.PORT, () => {
     console.log(`Escuchando el puerto ${process.env.PORT}`);
